@@ -9,6 +9,8 @@ import {AppService} from './app.service';
 export class AppComponent implements OnInit {
   title = 'newExamQs';
   typeList: object[];
+  id: string;
+  name: string;
 
   constructor(private appService: AppService) {
   }
@@ -19,7 +21,17 @@ export class AppComponent implements OnInit {
 
   getSortType(): void {
     this.appService.getSortType()
-      .subscribe(t => this.typeList = t);
+      .subscribe(t => {
+        this.typeList = t;
+        this.id = '1';
+        // @ts-ignore
+        this.name = t[0].child[0].name;
+        this.getQuesData();
+      });
   }
 
+  getQuesData(): void {
+    this.appService.getQuesData({id: this.id, name: this.name})
+      .subscribe(t => console.log(t));
+  }
 }

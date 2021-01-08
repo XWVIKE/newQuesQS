@@ -32,7 +32,7 @@ export class AppService {
   getQuesData(data: object): Observable<object> {
     const api = `${url.getQuesData}?num=${(data as any).id}&name=${(data as any).name}`;
     return this.http.get<Data>(api).pipe(
-      tap(_ => console.log(_)),
+      switchMap(_ => of(_.data)),
       catchError(this.handleError<object>('getQuarter', {}))
     );
   }
