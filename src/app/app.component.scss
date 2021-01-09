@@ -1,0 +1,78 @@
+.logo {
+  text-align: center;
+  line-height: 32px;
+  font-size: 20px;
+  height: 32px;
+  background: rgba(255, 255, 255, 0.2);
+  margin: 16px;
+  display: flex;
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+nz-sider {
+  overflow: auto;
+  height: 100%;
+  position: fixed;
+  left: 0;
+}
+
+.right-layout {
+  margin-left: 200px;
+  height: 100vh;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+nz-header {
+  box-sizing: border-box;
+  padding-left:15px;
+  padding-right:15px;
+  position: fixed;
+  width: calc(100% - 200px);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .title{
+    display: inline-block;
+    margin: 0;
+    font-size: 24px;
+  }
+  div{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .totalNum{
+      margin-right: 20px;
+    }
+    .search{
+      width: 300px;
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+  }
+}
+
+nz-content {
+  margin: 24px 16px 0;
+  padding-top: 64px;
+  padding-bottom: 80px;
+  overflow: initial;
+}
+
+.inner-content {
+  padding: 24px;
+  background: #fff;
+  text-align: center;
+}
+
+nz-footer {
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}

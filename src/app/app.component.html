@@ -1,20 +1,46 @@
-<nz-layout class="layout">
-  <nz-sider>
-    <ul nz-menu nzTheme="dark" *ngFor="let item of typeList" nzMode="inline">
-      <li nz-submenu [nzTitle]="item.type">
-        <ul>
-          <li nz-menu-item *ngFor="let li of item.child">{{li.name}}</li>
-        </ul>
-      </li>
-    </ul>
-  </nz-sider>
-  <nz-layout class="right-layout">
-    <nz-header>hello</nz-header>
-    <nz-content>
-      <div class="inner-content">
-        hello
-      </div>
-    </nz-content>
-    <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+<nz-spin [nzDelay]="500" [nzSpinning]="loading">
+  <nz-layout class="layout">
+    <nz-sider>
+      <div class="logo"><img [style.width.px]="168" [style.height.px]="32" src="../assets/img/1.gif"/></div>
+      <ul nz-menu nzTheme="dark" *ngFor="let item of typeList" nzMode="inline">
+        <li nz-submenu [nzTitle]="item.type">
+          <ul>
+            <li nz-menu-item [nzSelected]="li.name===selectType" (click)="setSelectType(li.name)"
+                *ngFor="let li of item.child">{{li.name}}</li>
+          </ul>
+        </li>
+      </ul>
+    </nz-sider>
+    <nz-layout class="right-layout">
+      <nz-header>
+        <p class="title">{{quesTitle}}</p>
+        <div>
+          <div class="totalNum">
+            <nz-button-group>
+              <button nz-button (click)="nextQues(false)" nzType="primary"><i nz-icon nzType="left"></i>上一题</button>
+              <button [style.width.px]="70" nz-button nzType="default">{{sortNum}}</button>
+              <button nz-button (click)="nextQues(true)" nzType="primary">下一题<i nz-icon nzType="right"></i></button>
+              <button [style.width.px]="70" nz-button nzType="default">{{totalNum}}</button>
+            </nz-button-group>
+          </div>
+          <div class="search">
+            <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
+              <input type="text" #sort [value]="sortNum" nz-input placeholder="搜索"/>
+            </nz-input-group>
+            <ng-template #suffixIconButton>
+              <button (click)="search(sort.value)" nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i>
+              </button>
+            </ng-template>
+          </div>
+          <button nz-button nzType="primary" nzDanger>问题反馈</button>
+        </div>
+      </nz-header>
+      <nz-content>
+        <div class="inner-content">
+          hello
+        </div>
+      </nz-content>
+      <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
+    </nz-layout>
   </nz-layout>
-</nz-layout>
+</nz-spin>

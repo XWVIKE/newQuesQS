@@ -129,5 +129,10 @@
   "defaultProject": "newExamQs",
   "cli": {
     "analytics": false
+  },
+  "schematics": {
+    "@schematics/angular:component": {
+      "styleext": "scss"
+    }
   }
 }
