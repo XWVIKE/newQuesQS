@@ -1,12 +1,12 @@
 <nz-spin [nzDelay]="500" [nzSpinning]="loading">
   <nz-layout class="layout">
     <nz-sider>
-      <div class="logo"><img [style.width.px]="168" [style.height.px]="32" src="assets/img/1.gif"/></div>
+      <div class="logo"><img [style.width.px]="168" [style.height.px]="32" src="assets/img/1.gif" /></div>
       <ul nz-menu nzTheme="dark" *ngFor="let item of typeList" nzMode="inline">
         <li nz-submenu [nzTitle]="item.type">
           <ul>
             <li nz-menu-item [nzSelected]="li.name===selectType" (click)="setSelectType(li.name)"
-                *ngFor="let li of item.child">{{li.name}}</li>
+              *ngFor="let li of item.child">{{li.name}}</li>
           </ul>
         </li>
       </ul>
@@ -25,7 +25,7 @@
           </div>
           <div class="search">
             <nz-input-group nzSearch [nzAddOnAfter]="suffixIconButton">
-              <input type="text" #sort [value]="sortNum" nz-input placeholder="搜索"/>
+              <input type="text" #sort [value]="sortNum" nz-input placeholder="搜索" />
             </nz-input-group>
             <ng-template #suffixIconButton>
               <button (click)="search(sort.value)" nz-button nzType="primary" nzSearch><i nz-icon nzType="search"></i>
@@ -45,13 +45,16 @@
           </nz-card>
           <nz-card [nzBordered]="false" nzTitle="选项：">
             <div cdkDropList class="example-list" (cdkDropListDropped)="moveOption($event)">
-              <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index" cdkDrag>{{i | optionLabel}}:
+              <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index"
+                cdkDrag>{{i | optionLabel}}:
                 <div [innerHTML]="item.option | bypassSecurityTrustHtml"></div>
               </div>
             </div>
           </nz-card>
         </div>
         <div>
+          <nz-card [nzBordered]="false" nzTitle="问题反馈：">
+          </nz-card>
           <nz-card [nzBordered]="false" nzTitle="解析：">
             <nz-card-tab>
               <nz-tabset nzSize="large" [(nzSelectedIndex)]="tab">

@@ -1,13 +1,13 @@
-import {Component, OnInit} from '@angular/core';
-import {AppService} from './app.service';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {tap, map} from 'rxjs/operators';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from './app.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { tap, map } from 'rxjs/operators';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
   title = 'newExamQs';
@@ -24,8 +24,10 @@ export class AppComponent implements OnInit {
   questionMaterial = [];
   options = [];
 
-  constructor(private appService: AppService, private message: NzMessageService) {
-  }
+  constructor(
+    private appService: AppService,
+    private message: NzMessageService
+  ) {}
 
   ngOnInit(): void {
     this.getSortType();
@@ -61,20 +63,20 @@ export class AppComponent implements OnInit {
   }
 
   getSortType(): void {
-    this.appService.getSortType()
-      .subscribe(t => {
-        this.typeList = t;
-        this.sortNum = 1;
-        this.selectType = (t[0] as any).child[0].name;
-        this.getQuesData();
-      });
+    this.appService.getSortType().subscribe((t) => {
+      this.typeList = t;
+      this.sortNum = 1;
+      this.selectType = (t[0] as any).child[0].name;
+      this.getQuesData();
+    });
   }
 
   getQuesData(): void {
     this.loading = true;
-    this.appService.getQuesData({sortNum: this.sortNum, name: this.selectType})
+    this.appService
+      .getQuesData({ sortNum: this.sortNum, name: this.selectType })
       .pipe(
-        tap(t => {
+        tap((t) => {
           if ((t as any).edit_parse_new[0].material !== undefined) {
             this.questionMaterial = (t as any).edit_parse_new[0].material;
           } else {
@@ -82,7 +84,7 @@ export class AppComponent implements OnInit {
           }
         })
       )
-      .subscribe(t => {
+      .subscribe((t) => {
         this.loading = false;
         this.totalNum = (t as any).TotalNum;
         this.quesTitle = (t as any).edit_parse_new[0].exam_name;
