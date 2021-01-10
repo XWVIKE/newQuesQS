@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AppService} from './app.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
-import {tap} from 'rxjs/operators';
+import {tap, map} from 'rxjs/operators';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -22,17 +22,7 @@ export class AppComponent implements OnInit {
   tab = 0;
   questionStem = [];
   questionMaterial = [];
-  movies = [
-    'Episode I - The Phantom Menace',
-    'Episode II - Attack of the Clones',
-    'Episode III - Revenge of the Sith',
-    'Episode IV - A New Hope',
-    'Episode V - The Empire Strikes Back',
-    'Episode VI - Return of the Jedi',
-    'Episode VII - The Force Awakens',
-    'Episode VIII - The Last Jedi',
-    'Episode IX – The Rise of Skywalker'
-  ];
+  options = [];
 
   constructor(private appService: AppService, private message: NzMessageService) {
   }
@@ -46,8 +36,8 @@ export class AppComponent implements OnInit {
   }
 
   // tslint:disable-next-line:typedef
-  drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
+  moveOption(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.options, event.previousIndex, event.currentIndex);
   }
 
   search(e: string): void {
@@ -97,6 +87,7 @@ export class AppComponent implements OnInit {
         this.totalNum = (t as any).TotalNum;
         this.quesTitle = (t as any).edit_parse_new[0].exam_name;
         this.questionStem = (t as any).edit_parse_new[0].title;
+        this.options = (t as any).edit_parse_new[0].options;
         console.log(t);
       });
   }

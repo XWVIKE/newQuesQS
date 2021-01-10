@@ -44,8 +44,10 @@
             <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
           </nz-card>
           <nz-card [nzBordered]="false" nzTitle="选项：">
-            <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-              <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
+            <div cdkDropList class="example-list" (cdkDropListDropped)="moveOption($event)">
+              <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index" cdkDrag>{{i | optionLabel}}:
+                <div [innerHTML]="item.option | bypassSecurityTrustHtml"></div>
+              </div>
             </div>
           </nz-card>
         </div>

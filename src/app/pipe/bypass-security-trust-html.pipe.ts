@@ -1,6 +1,6 @@
 import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer} from '@angular/platform-browser';
-import {json2html} from '../../assets/js/utils';
+import {jsonToHtml} from '../../assets/js/utils';
 
 @Pipe({
   name: 'bypassSecurityTrustHtml'
@@ -11,11 +11,7 @@ export class BypassSecurityTrustHtmlPipe implements PipeTransform {
   }
 
   transform(value: [], ...args: unknown[]): unknown {
-    let html = '';
-    value.forEach(item => {
-      html += json2html(item);
-    });
-    return this.domSanitizer.bypassSecurityTrustHtml(html);
+    return this.domSanitizer.bypassSecurityTrustHtml(jsonToHtml(value));
   }
 
 }

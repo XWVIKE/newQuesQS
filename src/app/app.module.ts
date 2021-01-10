@@ -12,13 +12,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { BypassSecurityTrustHtmlPipe } from './pipe/bypass-security-trust-html.pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import { OptionLabelPipe } from './pipe/option-label.pipe';
 
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
     AppComponent,
-    BypassSecurityTrustHtmlPipe
+    BypassSecurityTrustHtmlPipe,
+    OptionLabelPipe
   ],
   imports: [
     BrowserModule,
@@ -30,6 +32,6 @@ registerLocaleData(zh);
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent],
-  exports: [BypassSecurityTrustHtmlPipe]
+  exports: [BypassSecurityTrustHtmlPipe, OptionLabelPipe]
 })
 export class AppModule { }
