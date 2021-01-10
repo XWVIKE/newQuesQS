@@ -36,11 +36,30 @@
         </div>
       </nz-header>
       <nz-content>
-        <div class="inner-content">
-          hello
+        <div>
+          <nz-card [nzBordered]="false" nzTitle="资料：">
+            <div [innerHTML]="questionMaterial | bypassSecurityTrustHtml"></div>
+          </nz-card>
+          <nz-card [nzBordered]="false" nzTitle="题干：">
+            <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
+          </nz-card>
+          <nz-card [nzBordered]="false" nzTitle="选项：">
+            <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+              <div class="example-box" *ngFor="let movie of movies" cdkDrag>{{movie}}</div>
+            </div>
+          </nz-card>
+        </div>
+        <div>
+          <nz-card [nzBordered]="false" nzTitle="解析：">
+            <nz-card-tab>
+              <nz-tabset nzSize="large" [(nzSelectedIndex)]="tab">
+                <nz-tab nzTitle="tab1"></nz-tab>
+                <nz-tab nzTitle="tab2"></nz-tab>
+              </nz-tabset>
+            </nz-card-tab>
+          </nz-card>
         </div>
       </nz-content>
-      <nz-footer>Ant Design ©2020 Implement By Angular</nz-footer>
     </nz-layout>
   </nz-layout>
 </nz-spin>

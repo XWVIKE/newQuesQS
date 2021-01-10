@@ -10,21 +10,26 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgZorroAntdModule } from './ng-zorro-antd.module';
+import { BypassSecurityTrustHtmlPipe } from './pipe/bypass-security-trust-html.pipe';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 registerLocaleData(zh);
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BypassSecurityTrustHtmlPipe
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    NgZorroAntdModule
+    NgZorroAntdModule,
+    DragDropModule
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [BypassSecurityTrustHtmlPipe]
 })
 export class AppModule { }

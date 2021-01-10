@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AppService} from './app.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
+import {tap} from 'rxjs/operators';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
@@ -17,6 +19,20 @@ export class AppComponent implements OnInit {
   quesTitle: string;
   sortNum = 1;
   totalNum: number;
+  tab = 0;
+  questionStem = [];
+  questionMaterial = [];
+  movies = [
+    'Episode I - The Phantom Menace',
+    'Episode II - Attack of the Clones',
+    'Episode III - Revenge of the Sith',
+    'Episode IV - A New Hope',
+    'Episode V - The Empire Strikes Back',
+    'Episode VI - Return of the Jedi',
+    'Episode VII - The Force Awakens',
+    'Episode VIII - The Last Jedi',
+    'Episode IX – The Rise of Skywalker'
+  ];
 
   constructor(private appService: AppService, private message: NzMessageService) {
   }
@@ -27,6 +43,11 @@ export class AppComponent implements OnInit {
 
   jump(): void {
     window.open('chrome://dino/', '_blank');
+  }
+
+  // tslint:disable-next-line:typedef
+  drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.movies, event.previousIndex, event.currentIndex);
   }
 
   search(e: string): void {
@@ -62,10 +83,20 @@ export class AppComponent implements OnInit {
   getQuesData(): void {
     this.loading = true;
     this.appService.getQuesData({sortNum: this.sortNum, name: this.selectType})
+      .pipe(
+        tap(t => {
+          if ((t as any).edit_parse_new[0].material !== undefined) {
+            this.questionMaterial = (t as any).edit_parse_new[0].material;
+          } else {
+            this.questionMaterial = [];
+          }
+        })
+      )
       .subscribe(t => {
         this.loading = false;
         this.totalNum = (t as any).TotalNum;
         this.quesTitle = (t as any).edit_parse_new[0].exam_name;
+        this.questionStem = (t as any).edit_parse_new[0].title;
         console.log(t);
       });
   }
