@@ -37,12 +37,6 @@
       </nz-header>
       <nz-content>
         <div>
-          <nz-card [nzBordered]="false" nzTitle="资料：">
-            <div [innerHTML]="questionMaterial | bypassSecurityTrustHtml"></div>
-          </nz-card>
-          <nz-card [nzBordered]="false" nzTitle="题干：">
-            <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
-          </nz-card>
           <nz-card [nzBordered]="false" nzTitle="选项：">
             <div cdkDropList class="example-list" (cdkDropListDropped)="moveOption($event)">
               <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index"
@@ -51,26 +45,52 @@
               </div>
             </div>
           </nz-card>
+          <nz-card [nzBordered]="false" nzTitle="解析：">
+            <nz-card-tab>
+              <nz-tabset nzSize="large" [nzSelectedIndex]="tab" (nzSelectedIndexChange)="changeTab($event)">
+                <nz-tab *ngFor="let item of parseList" [nzTitle]="label">
+                  <ng-template #label>
+                    {{ item.label }}
+                    <i *ngIf="item.data.length<=0" nz-icon nzType="plus-circle" nzTheme="outline"></i>
+                  </ng-template>
+                </nz-tab>
+              </nz-tabset>
+            </nz-card-tab>
+            <div *ngIf="parseList[tab].data.length>0" style="margin-bottom: 10px">
+              <nz-radio-group [(ngModel)]="quesTrue" nzButtonStyle="solid">
+                <label nz-radio-button nzValue="0">正确</label>
+                <label nz-radio-button nzValue="1">错误</label>
+              </nz-radio-group>
+            </div>
+            <div [innerHTML]="parseList[tab].data | bypassSecurityTrustHtml"></div>
+          </nz-card>
+          <nz-card [nzBordered]="false" [nzTitle]="editHeader">
+            <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>
+            <ng-template #editHeader>
+              <div class="editHeader">
+                <span>编辑：</span>
+                <div>
+                  <button *ngIf="parseList[tab].data.length>0" style="margin-right: 20px" nz-button>
+                    导入{{parseList[tab].label}}</button>
+                  <button nz-button nzType="primary">保存</button>
+                </div>
+              </div>
+            </ng-template>
+          </nz-card>
         </div>
         <div>
-          <nz-card [nzBordered]="false" nzTitle="问题反馈：">
+          <nz-card *ngIf="problemList.length>0" [nzBordered]="false" nzTitle="问题反馈：">
             <div *ngFor="let item of problemList">
               <p>问题类型：{{item.QuesType}}</p>
               <p>问题描述：{{item.Content}}</p>
               <nz-divider></nz-divider>
             </div>
           </nz-card>
-          <nz-card [nzBordered]="false" nzTitle="解析：">
-            <nz-card-tab>
-              <nz-tabset nzSize="large" [(nzSelectedIndex)]="tab">
-                <nz-tab *ngFor="let item of parseList" [nzTitle]="label">
-                  <ng-template #label>
-                    {{ item.label }}
-                    <i *ngIf="item.data===null" nz-icon nzType="plus-circle" nzTheme="outline"></i>
-                  </ng-template>
-                </nz-tab>
-              </nz-tabset>
-            </nz-card-tab>
+          <nz-card *ngIf="questionMaterial.length>0" [nzBordered]="false" nzTitle="资料：">
+            <div [innerHTML]="questionMaterial | bypassSecurityTrustHtml"></div>
+          </nz-card>
+          <nz-card [nzBordered]="false" nzTitle="题干：">
+            <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
           </nz-card>
         </div>
       </nz-content>

@@ -93,7 +93,7 @@ nz-footer {
 }
 
 .example-box {
-  padding: 20px 10px;
+  padding: 5px 10px;
   border-bottom: solid 1px #ccc;
   color: rgba(0, 0, 0, 0.87);
   display: flex;
@@ -128,4 +128,9 @@ nz-footer {
 
 .example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
   transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.editHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

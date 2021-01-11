@@ -22,6 +22,13 @@ export class AppService {
   ) {
   }
 
+  uploadImg(data: object, httpOption: object): Observable<any> {
+    return this.http.post<Data>(url.uploadImg, data, httpOption).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('uploadImg', {}))
+    );
+  }
+
   getQuesProblem(id: string): Observable<any[]> {
     console.log(id);
     const api = `${url.getQuesProblem}?quesId=${id}`;

@@ -16,7 +16,7 @@ const json2html = function (data) {
         f += '</p>'
         break
       case 3 :
-        h += '<img class="tex" style="background-color:#fff;max-height:30px;height:25px;display: inline-block;"  src="'
+        h += '<img class="tex" style="background-color:#fff;max-height:30px;display: inline-block;"  src="'
         f += '" />'
         break
       case 'txt' :

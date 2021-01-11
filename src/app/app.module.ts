@@ -13,6 +13,7 @@ import { NgZorroAntdModule } from './ng-zorro-antd.module';
 import { BypassSecurityTrustHtmlPipe } from './pipe/bypass-security-trust-html.pipe';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { OptionLabelPipe } from './pipe/option-label.pipe';
+import { EditorModule } from '@tinymce/tinymce-angular';
 
 registerLocaleData(zh);
 
@@ -28,7 +29,8 @@ registerLocaleData(zh);
     HttpClientModule,
     BrowserAnimationsModule,
     NgZorroAntdModule,
-    DragDropModule
+    DragDropModule,
+    EditorModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent],
