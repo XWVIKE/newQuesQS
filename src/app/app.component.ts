@@ -71,7 +71,6 @@ export class AppComponent implements OnInit {
 
   changeTab(e): void {
     this.tab = e;
-    console.log(this.parseList[e].edit);
     this.editorContent = jsonToHtml(this.parseList[e].edit);
   }
 
@@ -147,7 +146,7 @@ export class AppComponent implements OnInit {
         // 获取某图解析
         tap(t => {
           const parsingTwo = (t as any).edit_parse_new[0].parsing_two || undefined;
-          const twoContent = (t as any).edit_parse_new[0].TwoContent || `[]`;
+          const twoContent = (t as any).edit_parse_new[0].twoContent || `[]`;
           if (parsingTwo !== undefined) {
             this.parseList[1].data = parsingTwo;
           } else {

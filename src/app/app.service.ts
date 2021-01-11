@@ -30,7 +30,6 @@ export class AppService {
   }
 
   getQuesProblem(id: string): Observable<any[]> {
-    console.log(id);
     const api = `${url.getQuesProblem}?quesId=${id}`;
     return this.http.get<Data>(api).pipe(
       switchMap(_ => of(_.data)),

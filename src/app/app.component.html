@@ -62,13 +62,16 @@
                 <label nz-radio-button nzValue="1">错误</label>
               </nz-radio-group>
             </div>
+            <div class="addIcon" *ngIf="parseList[tab].data.length<=0">
+              <i nz-tooltip nzTooltipTitle="在编辑卡片中新增该条目解析" nz-icon style="font-size: 30px" nzType="plus-circle" nzTheme="twotone"></i>
+            </div>
             <div [innerHTML]="parseList[tab].data | bypassSecurityTrustHtml"></div>
           </nz-card>
           <nz-card [nzBordered]="false" [nzTitle]="editHeader">
             <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>
             <ng-template #editHeader>
               <div class="editHeader">
-                <span>编辑：</span>
+                <span>{{parseList[tab].data.length>0?'修改':'新增'}}{{parseList[tab].label}}：</span>
                 <div>
                   <button *ngIf="parseList[tab].data.length>0" style="margin-right: 20px" nz-button>
                     导入{{parseList[tab].label}}</button>
