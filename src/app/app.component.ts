@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { AppService } from './app.service';
-import { NzMessageService } from 'ng-zorro-antd/message';
-import { tap, map } from 'rxjs/operators';
-import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import {Component, OnInit} from '@angular/core';
+import {AppService} from './app.service';
+import {NzMessageService} from 'ng-zorro-antd/message';
+import {tap, map} from 'rxjs/operators';
+import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-root',
@@ -12,7 +12,7 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 export class AppComponent implements OnInit {
   title = 'newExamQs';
   typeList: object[];
-  id: string;
+  quesId: string;
   name: string;
   selectType: string;
   loading: boolean;
@@ -23,11 +23,14 @@ export class AppComponent implements OnInit {
   questionStem = [];
   questionMaterial = [];
   options = [];
+  problemList = [];
+  parseList = [];
 
   constructor(
     private appService: AppService,
     private message: NzMessageService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.getSortType();
@@ -62,6 +65,12 @@ export class AppComponent implements OnInit {
     this.getQuesData();
   }
 
+  getQuesProblem(): void {
+    this.appService.getQuesProblem(this.quesId).subscribe(t => {
+      this.problemList = t;
+    });
+  }
+
   getSortType(): void {
     this.appService.getSortType().subscribe((t) => {
       this.typeList = t;
@@ -74,7 +83,7 @@ export class AppComponent implements OnInit {
   getQuesData(): void {
     this.loading = true;
     this.appService
-      .getQuesData({ sortNum: this.sortNum, name: this.selectType })
+      .getQuesData({sortNum: this.sortNum, name: this.selectType})
       .pipe(
         tap((t) => {
           if ((t as any).edit_parse_new[0].material !== undefined) {
@@ -85,11 +94,21 @@ export class AppComponent implements OnInit {
         })
       )
       .subscribe((t) => {
+        const parseList = [
+          {label: '某笔解析', data: null},
+          {label: '某图解析', data: null},
+          {label: '某果解析', data: null},
+          {label: '某公解析', data: null},
+          {label: '新途径解析', data: null},
+        ];
         this.loading = false;
+        this.quesId = (t as any).edit_parse_new[0].ques_id;
         this.totalNum = (t as any).TotalNum;
         this.quesTitle = (t as any).edit_parse_new[0].exam_name;
         this.questionStem = (t as any).edit_parse_new[0].title;
         this.options = (t as any).edit_parse_new[0].options;
+        this.getQuesProblem();
+        this.parseList = parseList;
         console.log(t);
       });
   }

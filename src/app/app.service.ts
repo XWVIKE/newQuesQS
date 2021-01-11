@@ -22,6 +22,15 @@ export class AppService {
   ) {
   }
 
+  getQuesProblem(id: string): Observable<any[]> {
+    console.log(id);
+    const api = `${url.getQuesProblem}?quesId=${id}`;
+    return this.http.get<Data>(api).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('getQuesProblem', []))
+    );
+  }
+
   getSortType(): Observable<object[]> {
     return this.http.get<Data>(url.getSortType).pipe(
       switchMap(_ => of(_.data)),
@@ -33,7 +42,7 @@ export class AppService {
     const api = `${url.getQuesData}?num=${(data as any).sortNum}&name=${(data as any).name}`;
     return this.http.get<Data>(api).pipe(
       switchMap(_ => of(_.data)),
-      catchError(this.handleError<object>('getQuarter', {}))
+      catchError(this.handleError<object>('getQuesData', []))
     );
   }
 
