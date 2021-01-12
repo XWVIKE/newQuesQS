@@ -1,4 +1,4 @@
-<nz-spin [nzDelay]="500" [nzSpinning]="loading">
+<nz-spin [nzDelay]="300" [nzSpinning]="loading">
   <nz-layout class="layout">
     <nz-sider>
       <div class="logo"><img [style.width.px]="168" [style.height.px]="32" src="assets/img/1.gif"/></div>
@@ -32,18 +32,23 @@
               </button>
             </ng-template>
           </div>
-          <button nz-button nzType="primary" nzDanger>问题反馈</button>
+          <button nz-button nzType="primary" (click)="showModal()" nzDanger>问题反馈</button>
         </div>
       </nz-header>
       <nz-content>
         <div>
-          <nz-card [nzBordered]="false" nzTitle="选项：">
-            <div cdkDropList class="example-list" (cdkDropListDropped)="moveOption($event)">
-              <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index"
-                   cdkDrag>{{i | optionLabel}}:
-                <div [innerHTML]="item.option | bypassSecurityTrustHtml"></div>
-              </div>
+          <nz-card *ngIf="problemList.length>0" [nzBordered]="false" nzTitle="问题反馈：">
+            <div *ngFor="let item of problemList">
+              <p>问题类型：{{item.QuesType}}</p>
+              <p>问题描述：{{item.Content}}</p>
+              <nz-divider></nz-divider>
             </div>
+          </nz-card>
+          <nz-card *ngIf="questionMaterial.length>0" [nzBordered]="false" nzTitle="资料：">
+            <div [innerHTML]="questionMaterial | bypassSecurityTrustHtml"></div>
+          </nz-card>
+          <nz-card [nzBordered]="false" nzTitle="题干：">
+            <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
           </nz-card>
           <nz-card [nzBordered]="false" nzTitle="解析：">
             <nz-card-tab>
@@ -63,15 +68,27 @@
               </nz-radio-group>
             </div>
             <div class="addIcon" *ngIf="parseList[tab].data.length<=0">
-              <i nz-tooltip nzTooltipTitle="在编辑卡片中新增该条目解析" nz-icon style="font-size: 30px" nzType="plus-circle" nzTheme="twotone"></i>
+              <i nz-tooltip nzTooltipTitle="在右侧新增该条目解析" nz-icon style="font-size: 30px" nzType="plus-circle"
+                 nzTheme="twotone"></i>
             </div>
             <div [innerHTML]="parseList[tab].data | bypassSecurityTrustHtml"></div>
           </nz-card>
+        </div>
+        <div>
+          <nz-card [nzBordered]="false" nzTitle="选项：">
+            <div cdkDropList class="example-list" (cdkDropListDropped)="moveOption($event)">
+              <div class="example-box" [style.color]="item.option[0].color" *ngFor="let item of options; let i=index"
+                   cdkDrag>{{i | optionLabel}}:
+                <div [innerHTML]="item.option | bypassSecurityTrustHtml"></div>
+              </div>
+            </div>
+          </nz-card>
           <nz-card [nzBordered]="false" [nzTitle]="editHeader">
-            <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>
+<!--            <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>-->
+            <div id="editor"></div>
             <ng-template #editHeader>
               <div class="editHeader">
-                <span>{{parseList[tab].data.length>0?'修改':'新增'}}{{parseList[tab].label}}：</span>
+                <span>{{parseList[tab].data.length > 0 ? '修改' : '新增'}}{{parseList[tab].label}}：</span>
                 <div>
                   <button *ngIf="parseList[tab].data.length>0" style="margin-right: 20px" nz-button>
                     导入{{parseList[tab].label}}</button>
@@ -81,21 +98,25 @@
             </ng-template>
           </nz-card>
         </div>
-        <div>
-          <nz-card *ngIf="problemList.length>0" [nzBordered]="false" nzTitle="问题反馈：">
-            <div *ngFor="let item of problemList">
-              <p>问题类型：{{item.QuesType}}</p>
-              <p>问题描述：{{item.Content}}</p>
-              <nz-divider></nz-divider>
-            </div>
-          </nz-card>
-          <nz-card *ngIf="questionMaterial.length>0" [nzBordered]="false" nzTitle="资料：">
-            <div [innerHTML]="questionMaterial | bypassSecurityTrustHtml"></div>
-          </nz-card>
-          <nz-card [nzBordered]="false" nzTitle="题干：">
-            <div [innerHTML]="questionStem | bypassSecurityTrustHtml"></div>
-          </nz-card>
-        </div>
+        <nz-modal [(nzVisible)]="isVisible" nzTitle="问题反馈" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+          <ng-container *nzModalContent>
+            <nz-radio-group [(ngModel)]="problemType" nzButtonStyle="solid">
+              <label nz-radio-button nzValue="重复问题">重复问题</label>
+              <label nz-radio-button nzValue="题干问题">题干问题</label>
+              <label nz-radio-button nzValue="选项问题">选项问题</label>
+              <label nz-radio-button nzValue="解析问题">解析问题</label>
+              <label nz-radio-button nzValue="其他">其他</label>
+            </nz-radio-group>
+            <textarea
+              style="margin-top: 20px"
+              maxlength="120"
+              nz-input
+              [(ngModel)]="problemText"
+              placeholder="请在120字内描述问题"
+              [nzAutosize]="{ minRows: 5, maxRows: 5 }"
+            ></textarea>
+          </ng-container>
+        </nz-modal>
       </nz-content>
     </nz-layout>
   </nz-layout>

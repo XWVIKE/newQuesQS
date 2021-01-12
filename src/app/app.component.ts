@@ -4,6 +4,7 @@ import {NzMessageService} from 'ng-zorro-antd/message';
 import {tap, map, catchError} from 'rxjs/operators';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 import {jsonToHtml} from '../assets/js/utils';
+import {NzModalService} from 'ng-zorro-antd/modal';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +28,10 @@ export class AppComponent implements OnInit {
   problemList = [];
   quesTrue = '0';
   editorContent = '';
+  isVisible = false;
+  problemType = '重复问题'; // 问题反馈类型
+  problemText = ''; // 问题反馈详细描述
+  quill: any;
   parseList = [
     {label: '某笔解析', data: [], edit: []},
     {label: '某图解析', data: [], edit: []},
@@ -34,15 +39,30 @@ export class AppComponent implements OnInit {
     {label: '某公解析', data: [], edit: []},
     {label: '新途径解析', data: [], edit: []},
   ];
+  toolbarOptions = [
+    ['bold', 'italic', 'underline', 'strike'],
+    ['blockquote', 'code-block'],
+    [{header: 1}, {header: 2}],
+    [{list: 'ordered'}, {list: 'bullet'}],
+    [{script: 'sub'}, {script: 'super'}],
+    [{indent: '-1'}, {indent: '+1'}],
+    [{direction: 'rtl'}],
+    [{size: ['small', false, 'large', 'huge']}],
+    [{header: [1, 2, 3, 4, 5, 6, false]}],
+    [{color: []}, {background: []}],
+    [{align: []}],
+    ['image'],
+  ];
 
   constructor(
     private appService: AppService,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private modal: NzModalService
   ) {
   }
 
   editorConfig = {
-    height: 200,
+    height: 400,
     language: 'zh_CN',
     entity_encoding: 'raw',
     automatic_uploads: false,
@@ -67,6 +87,53 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSortType();
+    this.initQuill();
+  }
+
+  initQuill(): void {
+    console.log(Quill);
+    this.quill = new Quill('#editor', {
+      theme: 'snow',
+      modules: {
+        toolbar: {
+          container: this.toolbarOptions,
+          handlers: {
+            image: (value) => {
+              if (value) {
+                // @ts-ignore
+                document.querySelector('#upload').click();
+              } else {
+                this.quill.format('image', false);
+              }
+            },
+          },
+        },
+      },
+    });
+  }
+
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
+  handleOk(): void {
+    this.modal.confirm({
+      nzTitle: '确定提交该问题反馈?',
+      nzContent: '<b style="color: red;">Some descriptions</b>',
+      nzOkText: 'Yes',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.isVisible = false;
+        console.log('OK');
+      },
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel')
+    });
+  }
+
+  showModal(): void {
+    this.isVisible = true;
   }
 
   changeTab(e): void {

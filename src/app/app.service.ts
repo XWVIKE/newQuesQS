@@ -29,7 +29,7 @@ export class AppService {
     );
   }
 
-  getQuesProblem(id: string): Observable<any[]> {
+  getQuesProblem(id: string): Observable<object[]> {
     const api = `${url.getQuesProblem}?quesId=${id}`;
     return this.http.get<Data>(api).pipe(
       switchMap(_ => of(_.data)),
