@@ -319,5 +319,23 @@ const formatDate = function (time, format) {
   });
   return format;
 }
-export {jsonToHtml, htmlToJson, formatDate, json2html}
+
+const isJSON = function (str=''){
+  try{
+    if(typeof JSON.parse(str) === 'object'){
+      return true;
+    }
+  }catch (e) {};
+  return false;
+}
+
+const toHtml = function (value=''){
+  if (isJSON(value)) {
+    return jsonToHtml(JSON.parse(value));
+  } else {
+    return value;
+  }
+}
+
+export {jsonToHtml, htmlToJson, formatDate, json2html, isJSON, toHtml}
 

@@ -14,6 +14,7 @@ import { BypassSecurityTrustHtmlPipe } from './pipe/bypass-security-trust-html.p
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { OptionLabelPipe } from './pipe/option-label.pipe';
 import { EditorModule } from '@tinymce/tinymce-angular';
+import { ToHtmlStringPipe } from './pipe/to-html-string.pipe';
 
 registerLocaleData(zh);
 
@@ -21,7 +22,8 @@ registerLocaleData(zh);
   declarations: [
     AppComponent,
     BypassSecurityTrustHtmlPipe,
-    OptionLabelPipe
+    OptionLabelPipe,
+    ToHtmlStringPipe
   ],
   imports: [
     BrowserModule,

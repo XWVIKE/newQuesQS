@@ -22,10 +22,48 @@ export class AppService {
   ) {
   }
 
+  addParse(data: object): Observable<any> {
+    return this.http.post<Data>(url.addParse, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('addParse', {}))
+    );
+  }
+
+  record(data: object): Observable<any> {
+    const api = `${url.record}?num=${(data as any).num}&quesId=${(data as any).quesId}&status=${(data as any).status}`;
+    console.log(data);
+    console.log(api);
+    return this.http.get<Data>(api).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('record', {}))
+    );
+  }
+
+  updateOption(data: object): Observable<any> {
+    return this.http.post<Data>(url.updateOption, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('updateOption', {}))
+    );
+  }
+
+  updateParse(data: object): Observable<any> {
+    return this.http.post<Data>(url.updateParse, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('updateParse', {}))
+    );
+  }
+
   uploadImg(data: object, httpOption: object): Observable<any> {
     return this.http.post<Data>(url.uploadImg, data, httpOption).pipe(
       switchMap(_ => of(_.data)),
       catchError(this.handleError<object>('uploadImg', {}))
+    );
+  }
+
+  addQuesProblem(data: object): Observable<any> {
+    return this.http.post<Data>(url.addQuesProblem, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('addQuesProblem', []))
     );
   }
 

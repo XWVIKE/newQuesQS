@@ -3,7 +3,7 @@ import {AppService} from './app.service';
 import {NzMessageService} from 'ng-zorro-antd/message';
 import {tap, map, catchError} from 'rxjs/operators';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {jsonToHtml} from '../assets/js/utils';
+import {jsonToHtml, isJSON, toHtml} from '../assets/js/utils';
 import {NzModalService} from 'ng-zorro-antd/modal';
 
 @Component({
@@ -14,7 +14,7 @@ import {NzModalService} from 'ng-zorro-antd/modal';
 export class AppComponent implements OnInit {
   title = 'newExamQs';
   typeList: object[];
-  quesId: string;
+  quesId = '0';
   name: string;
   selectType: string;
   loading: boolean;
@@ -26,6 +26,8 @@ export class AppComponent implements OnInit {
   questionMaterial = [];
   options = [];
   problemList = [];
+  moreNum = 1;
+  showProblemList = [];
   quesTrue = '0';
   editorContent = '';
   isVisible = false;
@@ -33,25 +35,11 @@ export class AppComponent implements OnInit {
   problemText = ''; // 问题反馈详细描述
   quill: any;
   parseList = [
-    {label: '某笔解析', data: [], edit: []},
-    {label: '某图解析', data: [], edit: []},
-    {label: '某果解析', data: [], edit: []},
-    {label: '某公解析', data: [], edit: []},
-    {label: '新途径解析', data: [], edit: []},
-  ];
-  toolbarOptions = [
-    ['bold', 'italic', 'underline', 'strike'],
-    ['blockquote', 'code-block'],
-    [{header: 1}, {header: 2}],
-    [{list: 'ordered'}, {list: 'bullet'}],
-    [{script: 'sub'}, {script: 'super'}],
-    [{indent: '-1'}, {indent: '+1'}],
-    [{direction: 'rtl'}],
-    [{size: ['small', false, 'large', 'huge']}],
-    [{header: [1, 2, 3, 4, 5, 6, false]}],
-    [{color: []}, {background: []}],
-    [{align: []}],
-    ['image'],
+    {label: '某笔解析', data: '[]', edit: [], error: false},
+    {label: '某图解析', data: '[]', edit: [], error: false},
+    {label: '某果解析', data: '[]', edit: [], error: false},
+    {label: '某公解析', data: '[]', edit: [], error: false},
+    {label: '新途径解析', data: '[]', edit: [], error: false},
   ];
 
   constructor(
@@ -62,7 +50,7 @@ export class AppComponent implements OnInit {
   }
 
   editorConfig = {
-    height: 400,
+    height: 500,
     language: 'zh_CN',
     entity_encoding: 'raw',
     automatic_uploads: false,
@@ -89,49 +77,156 @@ export class AppComponent implements OnInit {
     this.getSortType();
   }
 
-  handleCancel(): void {
-    this.isVisible = false;
+  more(): void {
+    if (this.problemList.length <= 1) {
+      this.message.info('只有一个问题反馈没有更多了');
+      return;
+    }
+    if (this.moreNum === 1) {
+      this.showProblemList = this.problemList;
+      this.moreNum = 2;
+    } else {
+      this.showProblemList = this.problemList.slice(0, 1);
+      this.moreNum = 1;
+    }
   }
 
-  handleOk(): void {
+  switchError(e): void {
+    this.parseList[this.tab].error = e;
+    const status = e ? '2' : '1';
+    const data = {
+      num: this.tab + 1,
+      quesId: this.quesId,
+      status,
+    };
+    this.appService.record(data).subscribe(t => {
+      this.message.success('修改成功');
+    });
+  }
+
+  /**
+   * 更新解析
+   */
+  updateParse(): void {
+    const html = this.parseList[this.tab].edit;
     this.modal.confirm({
-      nzTitle: '确定提交该问题反馈?',
-      nzContent: '<b style="color: red;">Some descriptions</b>',
-      nzOkText: 'Yes',
+      nzTitle: '确定保存此次更改？',
+      nzOkText: '确定',
       nzOkType: 'primary',
       nzOkDanger: true,
       nzOnOk: () => {
-        this.isVisible = false;
-        console.log('OK');
+        if (this.tab < 4) {
+          const arr = ['某笔解析', '某图解析', '某果解析', '某公解析'];
+          const data = {
+            num: this.tab + 1,
+            name: arr[this.tab],
+            quesId: this.quesId,
+            content: html,
+          };
+          this.appService.updateParse(data).subscribe(_ => {
+            this.message.success('成功');
+            this.getQuesData();
+          });
+        } else {
+          const data = {
+            quesId: this.quesId,
+            content: html,
+          };
+          this.appService.addParse(data).subscribe(t => {
+            this.message.success('成功');
+            this.getQuesData();
+          });
+        }
       },
-      nzCancelText: 'No',
+      nzCancelText: '取消',
       nzOnCancel: () => console.log('Cancel')
     });
   }
 
+  /**
+   * 取消反馈
+   */
+  handleCancel(): void {
+    this.isVisible = false;
+  }
+
+  /**
+   * 确定提交反馈
+   */
+  handleOk(): void {
+    if (this.problemText === '') {
+      this.message.error('请详细描述问题');
+      return;
+    }
+    this.modal.confirm({
+      nzTitle: '确定提交该问题反馈?',
+      nzOkText: '确定',
+      nzOkType: 'primary',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        const data = {
+          quesId: this.quesId,
+          quesType: this.problemType,
+          content: this.problemText
+        };
+        this.appService.addQuesProblem(data).subscribe(
+          t => {
+            this.getQuesProblem();
+            this.isVisible = false;
+            this.problemText = '';
+          }
+        );
+      },
+      nzCancelText: '取消',
+      nzOnCancel: () => console.log('Cancel')
+    });
+  }
+
+  /**
+   *  显示反馈对话框
+   */
   showModal(): void {
     this.isVisible = true;
   }
 
+  /**
+   * 切换解析tab
+   */
   changeTab(e): void {
     this.tab = e;
-    this.editorContent = jsonToHtml(this.parseList[e].edit);
   }
 
   jump(): void {
     window.open('chrome://dino/', '_blank');
   }
 
+  /**
+   * 拖动选项
+   */
   // tslint:disable-next-line:typedef
   moveOption(event: CdkDragDrop<string[]>) {
     moveItemInArray(this.options, event.previousIndex, event.currentIndex);
+    const arr = this.options;
+    const data = {
+      sort: arr,
+      quesId: this.quesId,
+    };
+    this.appService.updateOption(data).subscribe(t => {
+      this.message.success('排序成功');
+    });
   }
 
+  /**
+   * 搜索题目
+   */
   search(e: string): void {
     this.sortNum = +e <= 1 ? 1 : +e >= this.totalNum ? this.totalNum : +e;
     this.getQuesData();
   }
 
+  /**
+   * 下一题or上一题
+   */
   nextQues(e: boolean): void {
     const num = e ? this.sortNum + 1 : this.sortNum - 1;
     if (num <= 0 || num >= this.totalNum + 1) {
@@ -142,17 +237,28 @@ export class AppComponent implements OnInit {
     this.getQuesData();
   }
 
+  /**
+   * 选择分类
+   */
   setSelectType(e: string): void {
     this.selectType = e;
+    this.sortNum = 1;
     this.getQuesData();
   }
 
+  /**
+   * 获取问题反馈
+   */
   getQuesProblem(): void {
     this.appService.getQuesProblem(this.quesId).subscribe(t => {
       this.problemList = t || [];
+      this.showProblemList = this.problemList.slice(0, 1) || [];
     });
   }
 
+  /**
+   * 获取题目分类
+   */
   getSortType(): void {
     this.appService.getSortType().subscribe((t) => {
       this.typeList = t;
@@ -162,6 +268,9 @@ export class AppComponent implements OnInit {
     });
   }
 
+  /**
+   * 获取题目数据
+   */
   getQuesData(): void {
     this.loading = true;
     this.appService
@@ -182,10 +291,10 @@ export class AppComponent implements OnInit {
           if (parsingOne !== undefined) {
             this.parseList[0].data = parsingOne;
           } else {
-            this.parseList[0].data = JSON.parse(oneContent);
+            this.parseList[0].data = oneContent;
           }
-          this.parseList[0].edit = JSON.parse(oneContent);
-          this.editorContent = jsonToHtml(JSON.parse(oneContent));
+          this.parseList[0].edit = toHtml(oneContent);
+          this.parseList[0].error = (t as any).edit_parse_new[0].isRightOne || false;
         }),
         // 获取某图解析
         tap(t => {
@@ -194,9 +303,10 @@ export class AppComponent implements OnInit {
           if (parsingTwo !== undefined) {
             this.parseList[1].data = parsingTwo;
           } else {
-            this.parseList[1].data = JSON.parse(twoContent);
+            this.parseList[1].data = twoContent;
           }
-          this.parseList[1].edit = JSON.parse(twoContent);
+          this.parseList[1].edit = toHtml(twoContent);
+          this.parseList[1].error = (t as any).edit_parse_new[0].isRightTwo || false;
         }),
         // 获取某果解析
         tap(t => {
@@ -205,9 +315,10 @@ export class AppComponent implements OnInit {
           if (parsingThr !== undefined) {
             this.parseList[2].data = parsingThr;
           } else {
-            this.parseList[2].data = JSON.parse(thrContent);
+            this.parseList[2].data = thrContent;
           }
-          this.parseList[2].edit = JSON.parse(thrContent);
+          this.parseList[2].edit = toHtml(thrContent);
+          this.parseList[2].error = (t as any).edit_parse_new[0].isRightThr || false;
         }),
         // 获取某公解析
         tap(t => {
@@ -216,9 +327,10 @@ export class AppComponent implements OnInit {
           if (parsingFou !== undefined) {
             this.parseList[3].data = parsingFou;
           } else {
-            this.parseList[3].data = JSON.parse(fouContent);
+            this.parseList[3].data = fouContent;
           }
-          this.parseList[3].edit = JSON.parse(fouContent);
+          this.parseList[3].edit = toHtml(fouContent);
+          this.parseList[3].error = (t as any).edit_parse_new[0].isRightFou || false;
         }),
         // 获取新途径解析
         tap(t => {
@@ -226,8 +338,9 @@ export class AppComponent implements OnInit {
           if (parsingXtj !== undefined) {
             this.parseList[4].data = parsingXtj;
           } else {
-            this.parseList[4].data = [];
+            this.parseList[4].data = '[]';
           }
+          this.parseList[4].edit = [];
         })
       )
       .subscribe((t) => {
