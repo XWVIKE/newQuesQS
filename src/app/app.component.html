@@ -84,8 +84,7 @@
             </div>
           </nz-card>
           <nz-card [nzBordered]="false" [nzTitle]="editHeader">
-<!--            <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>-->
-            <div id="editor"></div>
+            <editor id="editorID" [init]="editorConfig" [(ngModel)]="editorContent"></editor>
             <ng-template #editHeader>
               <div class="editHeader">
                 <span>{{parseList[tab].data.length > 0 ? '修改' : '新增'}}{{parseList[tab].label}}：</span>

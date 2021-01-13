@@ -87,29 +87,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.getSortType();
-    this.initQuill();
-  }
-
-  initQuill(): void {
-    console.log(Quill);
-    this.quill = new Quill('#editor', {
-      theme: 'snow',
-      modules: {
-        toolbar: {
-          container: this.toolbarOptions,
-          handlers: {
-            image: (value) => {
-              if (value) {
-                // @ts-ignore
-                document.querySelector('#upload').click();
-              } else {
-                this.quill.format('image', false);
-              }
-            },
-          },
-        },
-      },
-    });
   }
 
   handleCancel(): void {
