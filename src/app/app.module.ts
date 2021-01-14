@@ -15,6 +15,9 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import { OptionLabelPipe } from './pipe/option-label.pipe';
 import { EditorModule } from '@tinymce/tinymce-angular';
 import { ToHtmlStringPipe } from './pipe/to-html-string.pipe';
+import { AppRoutingModule } from './app-routing.module';
+import { QuesComponent } from './component/ques/ques.component';
+import { LoginComponent } from './component/login/login.component';
 
 registerLocaleData(zh);
 
@@ -23,7 +26,9 @@ registerLocaleData(zh);
     AppComponent,
     BypassSecurityTrustHtmlPipe,
     OptionLabelPipe,
-    ToHtmlStringPipe
+    ToHtmlStringPipe,
+    QuesComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +38,7 @@ registerLocaleData(zh);
     NgZorroAntdModule,
     DragDropModule,
     EditorModule,
+    AppRoutingModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: zh_CN }],
   bootstrap: [AppComponent],

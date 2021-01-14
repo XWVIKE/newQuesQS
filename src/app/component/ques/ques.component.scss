@@ -1,0 +1,168 @@
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+  background-color: #F5F5F5;
+}
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+  border-radius: 10px;
+  background-color: #FFF;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 6px rgba(95, 95, 95, 0.3);
+  background-color: #cfcfcf;
+}
+
+.logo {
+  text-align: center;
+  line-height: 64px;
+  font-size: 20px;
+  height: 64px;
+  background: rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  img{
+    width: 130px;
+    height: 43px;
+  }
+}
+
+.layout {
+  min-height: 100vh;
+}
+
+nz-sider {
+  overflow: auto;
+  height: 100%;
+  position: fixed;
+  left: 0;
+}
+
+.right-layout {
+  margin-left: 200px;
+  height: 100vh;
+  overflow: hidden;
+  overflow-y: auto;
+}
+
+nz-header {
+  z-index: 99;
+  box-sizing: border-box;
+  padding-left:15px;
+  padding-right:15px;
+  position: fixed;
+  width: calc(100% - 200px);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  .title{
+    overflow: hidden;
+    text-overflow:ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    margin: 0;
+    min-width: 100px;
+    font-size: 24px;
+  }
+  div{
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    .totalNum{
+      margin-right: 20px;
+    }
+    .search{
+      width: 150px;
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+    }
+  }
+}
+
+nz-content {
+  margin: 24px 16px 0;
+  padding-top: 64px;
+  padding-bottom: 20px;
+  overflow: initial;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  &>div{
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+    width: calc(50% - 10px);
+    &>nz-card{
+      margin-bottom: 20px;
+    }
+  }
+}
+
+nz-footer {
+  text-align: center;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+}
+.example-list {
+  width: 100%;
+  max-width: 100%;
+  border: solid 1px #ccc;
+  min-height: 60px;
+  display: block;
+  background: white;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.example-box {
+  padding: 5px 10px;
+  border-bottom: solid 1px #ccc;
+  color: rgba(0, 0, 0, 0.87);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  box-sizing: border-box;
+  cursor: move;
+  background: white;
+  font-size: 14px;
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2),
+  0 8px 10px 1px rgba(0, 0, 0, 0.14),
+  0 3px 14px 2px rgba(0, 0, 0, 0.12);
+}
+
+.cdk-drag-placeholder {
+  opacity: 0;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.example-box:last-child {
+  border: none;
+}
+
+.example-list.cdk-drop-list-dragging .example-box:not(.cdk-drag-placeholder) {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+.editHeader{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.addIcon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
