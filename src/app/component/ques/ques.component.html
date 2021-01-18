@@ -3,7 +3,7 @@
     <nz-sider>
       <div class="logo"><img src="assets/img/xtjjy.png"/></div>
       <ul nz-menu nzTheme="dark" *ngFor="let item of typeList" nzMode="inline">
-        <li nz-submenu [nzTitle]="item.type">
+        <li nz-submenu [nzOpen]="true" [nzTitle]="item.type">
           <ul>
             <li nz-menu-item [nzSelected]="li.name===selectType" (click)="setSelectType(li.name)"
                 *ngFor="let li of item.child">{{li.name}}</li>
