@@ -4,7 +4,7 @@ const json2html = function (data) {
   } catch (e) {
   }
 
-  function aGenTag(name, value) {
+  function aGenTag (name, value) {
     var h = '', f = ''
     switch (name) {
       case 'doc':
@@ -16,7 +16,7 @@ const json2html = function (data) {
         f += '</p>'
         break
       case 3 :
-        h += '<img class="tex" style="background-color:#fff;max-height:30px;display: inline-block;"  src="'
+        h += '<img class="tex" style="background-color:#fff;max-height:40px;display: inline-block;"  src="'
         f += '" />'
         break
       case 'txt' :
@@ -47,57 +47,48 @@ const json2html = function (data) {
         h += '<span class="red">***未知格式，请联系研发部***'
         f += '</span>'
     }
-    return {h: h, f: f}
+    return { h: h, f: f }
   }
-
   var h = '', f = '', content = ''
-  if (data.type) {
-    var tag = aGenTag(data.type, data.txt)
-    h = tag.h
-    f = tag.f
-  }
-  if (data.type == 'color') {
-    return h + content + f
-  } else {
-    let value = data.type === 1 ? data.txt : data.image
-    return h + value + content + f
-  }
+  let value = data.type === 1 ? data.txt : data.image
+  return h + value + content + f
+
 }
 
 //html转json
 const htmlToJson = function (html) {
   let json = mapDOM(html)
   let arr = unfold(json)
-  const list = [];
+  const list = []
   for (let i = 0; i < arr.length; i++) {
-    if (typeof arr[i] === "string") {
-      list.push({type: 1, txt: arr[i]})
+    if (typeof arr[i] === 'string') {
+      list.push({ type: 1, txt: arr[i] })
     } else {
       try {
         list.push({
           type: 2,
           image: arr[i]['attributes']['src'],
           width: arr[i]['attributes']['width'],
-          height: arr[i]['attributes']['height']
+          height: arr[i]['attributes']['height'],
         })
       } catch (e) {
         console.log(e)
       }
     }
   }
-  return list;
+  return list
 }
 
 //展开多维数组
-function unfold(arr) {
-  const newArr = [];
-  const newArrTwo = [];
+function unfold (arr) {
+  const newArr = []
+  const newArrTwo = []
   const ergodic = (arr) => {
     arr.forEach((item) => {
       if (Array.isArray(item)) {
-        ergodic(item);
+        ergodic(item)
       } else {
-        newArr.push(item);
+        newArr.push(item)
       }
     })
     ergodicTwo(newArr)
@@ -105,9 +96,9 @@ function unfold(arr) {
   const ergodicTwo = (arr) => {
     arr.forEach((item) => {
       if (Array.isArray(item.content)) {
-        ergodicTwo(item.content);
+        ergodicTwo(item.content)
       } else {
-        newArrTwo.push(item);
+        newArrTwo.push(item)
       }
     })
   }
@@ -115,17 +106,17 @@ function unfold(arr) {
   return newArrTwo
 }
 
-function decodeHtml(text) {
+function decodeHtml (text) {
   const HTML_DECODE = {
-    "&lt;": "<",
-    "&gt;": ">",
-    "&amp;": "&",
-    "&nbsp;": " ",
-    "&quot;": "\"",
-    "&copy;": "©",
-    "&ldquo;": "“",
-    "&rdquo;": "”",
-    "/\n": "",
+    '&lt;': '<',
+    '&gt;': '>',
+    '&amp;': '&',
+    '&nbsp;': ' ',
+    '&quot;': '"',
+    '&copy;': '©',
+    '&ldquo;': '“',
+    '&rdquo;': '”',
+    '/\n': '',
   }
   let regStr = '(' + Object.keys(HTML_DECODE).toString() + ')'
   regStr = regStr.replace(/,/g, ')|(')
@@ -134,63 +125,63 @@ function decodeHtml(text) {
 }
 
 //序列化html树
-function mapDOM(element, json = false) {
-  let treeObject = {}, parser, docNode;
+function mapDOM (element, json = false) {
+  let treeObject = {}, parser, docNode
   let data = decodeHtml(element)
   let str = `<div>${data}</div>`
 
   // If string convert to document Node
-  if (typeof str === "string") {
+  if (typeof str === 'string') {
     if (window.DOMParser) {
-      parser = new DOMParser();
-      docNode = parser.parseFromString(str, "text/xml");
+      parser = new DOMParser()
+      docNode = parser.parseFromString(str, 'text/xml')
     } else { // Microsoft strikes again
-      docNode = new ActiveXObject("Microsoft.XMLDOM");
-      docNode.async = false;
-      docNode.loadXML(str);
+      docNode = new ActiveXObject('Microsoft.XMLDOM')
+      docNode.async = false
+      docNode.loadXML(str)
     }
-    str = docNode.firstChild;
+    str = docNode.firstChild
   }
 
   //Recursively loop through DOM elements and assign properties to object
-  function treeHTML(str, object) {
-    object["type"] = str.nodeName;
-    var nodeList = str.childNodes;
+  function treeHTML (str, object) {
+    object['type'] = str.nodeName
+    var nodeList = str.childNodes
     if (nodeList != null) {
       if (nodeList.length) {
-        object["content"] = [];
+        object['content'] = []
         for (var i = 0; i < nodeList.length; i++) {
           if (nodeList[i].nodeType == 3) {
-            object["content"].push(nodeList[i].nodeValue);
+            object['content'].push(nodeList[i].nodeValue)
           } else {
-            object["content"].push({});
-            treeHTML(nodeList[i], object["content"][object["content"].length - 1]);
+            object['content'].push({})
+            treeHTML(nodeList[i], object['content'][object['content'].length - 1])
           }
         }
       }
     }
     if (str.attributes != null) {
       if (str.attributes.length) {
-        object["attributes"] = {};
+        object['attributes'] = {}
         for (var i = 0; i < str.attributes.length; i++) {
-          object["attributes"][str.attributes[i].nodeName] = str.attributes[i].nodeValue;
+          object['attributes'][str.attributes[i].nodeName] = str.attributes[i].nodeValue
         }
       }
     }
   }
 
-  treeHTML(str, treeObject);
-  return (json) ? JSON.stringify(treeObject) : treeObject;
+  treeHTML(str, treeObject)
+  return (json) ? JSON.stringify(treeObject) : treeObject
 }
 
 //转换json为html格式
-function run(arr) {
-  let str = '';
+function run (arr) {
+  let str = ''
   let img = (url, width, height) => {
     return `<img src="${url}" style="max-width:100%;width: ${width}px;height: ${height}px" alt="img" />`
   }
-  let formula = (url) => {
-    return `<img src="${url}" style="background-color:#fff;max-height:30px;height:25px;display: inline-block;"/>`
+  let formula = (url,height=25) => {
+    return `<img src="${url}" style="background-color:#fff;max-height:35px;height:${height}px;display: inline-block;"/>`
   }
   let p = (txt, color = '#000') => {
     return `<p style="display: inline-block;color: ${color}">${txt}</p>`
@@ -207,34 +198,33 @@ function run(arr) {
     } else if (arr[i].type === 2) {
       str += img(arr[i].image, arr[i].width, arr[i].height)
     } else if (arr[i].type === 3) {
-      str += formula(arr[i].image)
+      str += formula(arr[i].image,arr[i].height)
     } else if (arr[i].type === 1 && i === arr.length - 1) {
       str += `${arr[i].txt}</div>`
     }
   }
-  return str;
+  return str
 }
 
-
 //以类型0分割数组
-function slice(arr) {
-  let zeroList = [];
-  const backArr = [...arr];
-  let newArr = [];
-  let start = 0, end = 0;
+function slice (arr) {
+  let zeroList = []
+  const backArr = [...arr]
+  let newArr = []
+  let start = 0, end = 0
   for (let i in arr) {
     if (arr[i]['type'] === 0) {
       if (start === 0) {
-        start = 0;
+        start = 0
         end = i
       } else {
         end = i
       }
-      ;
-      zeroList.push({start, end})
-      start = end;
+
+      zeroList.push({ start, end })
+      start = end
     } else if (arr[i]['type'] !== 0 && i == arr.length - 1) {
-      zeroList.push({start, end: arr.length})
+      zeroList.push({ start, end: arr.length })
     }
   }
   if (zeroList.length === 0) {
@@ -242,100 +232,101 @@ function slice(arr) {
   } else {
     zeroList.forEach(item => {
       let tempArr = backArr.slice(item.start, item.end)
-      let index = tempArr.findIndex(item => item.type === 0);
+      let index = tempArr.findIndex(item => item.type === 0)
       if (index !== -1) {
         tempArr.splice(index, 1)
       }
       newArr.push(tempArr)
-      newArr.push([{type: 0}])
+      newArr.push([{ type: 0 }])
     })
     return newArr
   }
 }
 
 //为分段数组两端添加p标签
-function addPTypeOne(arr = []) {
-  let newArr = [...arr];
+function addPTypeOne (arr = []) {
+  let newArr = [...arr]
   if (newArr.length === 1) {
     if (newArr[0]['type'] !== 1) {
-      newArr = [{type: 1, txt: ''}, newArr[0], {type: 1, txt: ''}]
+      newArr = [{ type: 1, txt: '' }, newArr[0], { type: 1, txt: '' }]
     } else {
-      newArr.push({type: 1, txt: ''})
+      newArr.push({ type: 1, txt: '' })
     }
   } else if (newArr.length > 1) {
     if (newArr[0]['type'] !== 1) {
-      newArr.splice(0, 0, {type: 1, txt: ''})
+      newArr.splice(0, 0, { type: 1, txt: '' })
     }
     if (newArr[arr.length - 1]['type'] !== 1) {
-      newArr.push({type: 1, txt: ''})
+      newArr.push({ type: 1, txt: '' })
     }
   }
-  return newArr;
+  return newArr
 }
 
 const jsonToHtml = function (arr) {
-  let groupArr = slice(arr);
+  let groupArr = slice(arr)
   // console.log(groupArr)
-  let backGroupArr = [], str = '';
+  let backGroupArr = [], str = ''
   groupArr.forEach(item => {
     backGroupArr.push(addPTypeOne(item))
   })
   backGroupArr.forEach(item => {
     str += run(item)
   })
-  return str;
+  return str
 }
 const formatDate = function (time, format) {
-  var date = time || new Date();
+  var date = time || new Date()
   var map = {
     'y': date.getFullYear(),
     'M': date.getMonth() + 1,//month
     'd': date.getDate(),//date
     'H': date.getHours(),//hours
     'm': date.getMinutes(),//minutes
-    's': date.getSeconds() //seconds
-  };
+    's': date.getSeconds(), //seconds
+  }
   for (var i in map) {
     if (map.hasOwnProperty(i)) {
       if (map[i] < 10) {
-        map[i] = '0' + map[i];
+        map[i] = '0' + map[i]
       }
     }
   }
-  format = format || 'yyyy-MM-dd HH:mm:ss';
-  var reg = new RegExp('y+|M+|d+|H+|m+|s+', 'g');
-  var regY = new RegExp('y');
+  format = format || 'yyyy-MM-dd HH:mm:ss'
+  var reg = new RegExp('y+|M+|d+|H+|m+|s+', 'g')
+  var regY = new RegExp('y')
   format = format.replace(reg, function (v) {
-    var old = v;
+    var old = v
     if (regY.test(v)) {
-      var y = "" + map['y'];
-      var len = 4 - v.length;
-      old = y.substr(len);
+      var y = '' + map['y']
+      var len = 4 - v.length
+      old = y.substr(len)
     } else {
-      var key = v.substr(0, 1);
-      old = map[key];
+      var key = v.substr(0, 1)
+      old = map[key]
     }
-    return old;
-  });
-  return format;
+    return old
+  })
+  return format
 }
 
-const isJSON = function (str=''){
-  try{
-    if(typeof JSON.parse(str) === 'object'){
-      return true;
+const isJSON = function (str = '') {
+  try {
+    if (typeof JSON.parse(str) === 'object') {
+      return true
     }
-  }catch (e) {};
-  return false;
+  } catch (e) {}
+
+  return false
 }
 
-const toHtml = function (value=''){
+const toHtml = function (value = '') {
   if (isJSON(value)) {
-    return jsonToHtml(JSON.parse(value));
+    return jsonToHtml(JSON.parse(value))
   } else {
-    return value;
+    return value
   }
 }
 
-export {jsonToHtml, htmlToJson, formatDate, json2html, isJSON, toHtml}
+export { jsonToHtml, htmlToJson, formatDate, json2html, isJSON, toHtml }
 
