@@ -10,6 +10,9 @@ const url = {
   updateOption: baseUlr + '/auditParse/option',
   record: baseUlr + '/auditParse/record',
   addParse: baseUlr + '/auditParse/addParse',
+  goLogin: baseUlr + '/auditParse/login',
+  goRegister: baseUlr + '/auditParse/register',
+  // goRegister: 'http://47.102.40.118:8098/auditParse/register'
 };
 
 export {url};

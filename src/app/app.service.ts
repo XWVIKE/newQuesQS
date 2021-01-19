@@ -2,8 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable, of} from 'rxjs';
 import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {url} from '../config/api';
-
+import { url } from '../config/api';
 interface Data {
   data: any;
   message: string;
@@ -15,13 +14,13 @@ interface Data {
 })
 
 export class AppService {
-  httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json'})};
+  httpOptions = {headers: new HttpHeaders({'Content-Type': 'application/json','Authorization':'JWT'+localStorage.getItem("token")})};
 
   constructor(
     private http: HttpClient
   ) {
   }
-
+  
   addParse(data: object): Observable<any> {
     return this.http.post<Data>(url.addParse, data).pipe(
       switchMap(_ => of(_.data)),
@@ -87,6 +86,19 @@ export class AppService {
     return this.http.get<Data>(api).pipe(
       switchMap(_ => of(_.data)),
       catchError(this.handleError<object>('getQuesData', []))
+    );
+  }
+
+  login(data: object): Observable<any> {
+    return this.http.post<Data>(url.goLogin, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('login', {}))
+    );
+  }
+  register(data: object): Observable<any> {
+    return this.http.post<Data>(url.goRegister, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('register', {}))
     );
   }
 
