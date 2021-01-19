@@ -4,16 +4,15 @@ import {ActivatedRoute, Params, Router} from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  selector: 'app-register',
+  templateUrl: './register.component.html',
+  styleUrls: ['./register.component.css']
 })
-export class LoginComponent implements OnInit {
+export class RegisterComponent implements OnInit {
   validateForm!: FormGroup;
   loading = false;  
   errorMsg;
-
-  submitForm(): void {
+  registerForm(): void {
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
@@ -24,33 +23,33 @@ export class LoginComponent implements OnInit {
     }
     this.loading = true;
     const data = {
-      mobile: this.validateForm.value.userName,
+      userName: this.validateForm.value.userName,
+      mobile: this.validateForm.value.mobile,
       password: this.validateForm.value.password
     };
-    // console.log(data)
-    this.appService.login(data).subscribe(t => {
-      // console.log(t);
+    console.log(data);
+    this.appService.register(data).subscribe(t => {
+      console.log(t);
       this.loading = false;
-      if (t ===null) {
-        this.errorMsg = "请检查账号密码"
-      } else {
-        this.errorMsg =null ;
+      if (t !== null) {
+        this.errorMsg = null
         localStorage.setItem('token',t); 
         this.router.navigate(['/ques']);
+      } else {
+        this.errorMsg = "注册失败"
       }
-      // this.message.success('修改成功');
     });
-  }
+   }
+ 
 
   constructor(private fb: FormBuilder,private appService: AppService,private router: Router) { }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
       userName: [null, [Validators.required]],
-      password: [null, [Validators.required]],
-      remember: [true]
+      mobile: [null, [Validators.required]],
+      password: [null, [Validators.required]]
     });
-
   }
 
 }
