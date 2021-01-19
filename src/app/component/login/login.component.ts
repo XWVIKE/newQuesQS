@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { AppService } from '../../app.service';
+import {Component, OnInit} from '@angular/core';
+import {AppService} from '../../app.service';
 import {ActivatedRoute, Params, Router} from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -10,16 +10,17 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   validateForm!: FormGroup;
-  loading = false;  
+  loading = false;
   errorMsg;
 
   submitForm(): void {
+    // tslint:disable-next-line:forin
     for (const i in this.validateForm.controls) {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if (!this.validateForm.valid) {
-      this.errorMsg =null ;
+      this.errorMsg = null;
       return;
     }
     this.loading = true;
@@ -31,18 +32,19 @@ export class LoginComponent implements OnInit {
     this.appService.login(data).subscribe(t => {
       // console.log(t);
       this.loading = false;
-      if (t ===null) {
-        this.errorMsg = "请检查账号密码"
+      if (t === null) {
+        this.errorMsg = '请检查账号密码';
       } else {
-        this.errorMsg =null ;
-        localStorage.setItem('token',t); 
+        this.errorMsg = null;
+        localStorage.setItem('token', t);
         this.router.navigate(['/ques']);
       }
       // this.message.success('修改成功');
     });
   }
 
-  constructor(private fb: FormBuilder,private appService: AppService,private router: Router) { }
+  constructor(private fb: FormBuilder, private appService: AppService, private router: Router) {
+  }
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
