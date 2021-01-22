@@ -36,6 +36,25 @@
           <a href="assets/常见问题.pdf" target="_blank">
             <button nz-button nzType="primary" (click)="jump()" nzDanger>帮助</button>
           </a>
+          <div class="user-dropdown">
+            <a class="user-info" nz-dropdown [nzDropdownMenu]="headerMenu" [nzPlacement]="'bottomRight'" [nzOverlayStyle]="{top:'18px' }">
+              <nz-avatar class="avatar" [nzSize]="32" nzIcon="user" [nzSrc]="avatar"></nz-avatar>
+              <a class="text">{{userName}}</a>
+            </a>
+            <nz-dropdown-menu #headerMenu="nzDropdownMenu">
+              <ul nz-menu>
+                <li nz-menu-item> <i nz-icon nzType="setting" nzTheme="outline"></i> 设置
+                </li>
+                <!-- <li nz-menu-item> <i nz-icon nzType="user" nzTheme="outline"></i> 个人中心
+                </li> -->
+                <li nz-menu-item (click)="editPassWord()"> <i nz-icon nzType="lock" nzTheme="outline"></i>
+                  修改密码
+                </li>
+                <li nz-menu-item (click)="loginout()"> <i nz-icon nzType="export" nzTheme="outline"></i> 退出
+                </li>
+              </ul>
+            </nz-dropdown-menu>
+          </div>
         </div>
       </nz-header>
       <nz-content>

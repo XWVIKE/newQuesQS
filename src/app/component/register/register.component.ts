@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AppService} from '../../app.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from '../../app.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -29,16 +29,18 @@ export class RegisterComponent implements OnInit {
       mobile: this.validateForm.value.mobile,
       password: this.validateForm.value.password
     };
-    console.log(data);
+    // console.log(data);
     this.appService.register(data).subscribe(t => {
-      console.log(t);
+      // console.log(t);
       this.loading = false;
-      if (t !== null) {
+      if (t.data !== null) {
         this.errorMsg = null;
-        localStorage.setItem('token', t);
+        localStorage.setItem('token', t.data);
+        localStorage.setItem('mobile', data.mobile);
+        localStorage.setItem('name', data.userName);
         this.router.navigate(['/ques']);
       } else {
-        this.errorMsg = '注册失败';
+        this.errorMsg = t.message;
       }
     });
   }

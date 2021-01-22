@@ -19,6 +19,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { QuesComponent } from './component/ques/ques.component';
 import { LoginComponent } from './component/login/login.component';
 import { RegisterComponent } from './component/register/register.component';
+import { editpasswordComponent } from './component/ques/dialog/editpassword.dialog'
 
 registerLocaleData(zh);
 
@@ -30,7 +31,8 @@ registerLocaleData(zh);
     ToHtmlStringPipe,
     QuesComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    editpasswordComponent
   ],
   imports: [
     BrowserModule,
@@ -42,6 +44,9 @@ registerLocaleData(zh);
     DragDropModule,
     EditorModule,
     AppRoutingModule,
+  ],
+  entryComponents: [
+    editpasswordComponent
   ],
   providers: [ { provide:  NZ_I18N, useValue: zh_CN, }],
   bootstrap: [AppComponent],

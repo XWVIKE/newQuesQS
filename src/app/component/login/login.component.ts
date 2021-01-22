@@ -32,15 +32,24 @@ export class LoginComponent implements OnInit {
     this.appService.login(data).subscribe(t => {
       // console.log(t);
       this.loading = false;
-      if (t === null) {
-        this.errorMsg = '请检查账号密码';
+      if (t.data === null) {
+        this.errorMsg = t.message;
       } else {
         this.errorMsg = null;
-        localStorage.setItem('token', t);
+        localStorage.setItem('token', t.data);
+        this.getUserInfo();
         this.router.navigate(['/ques']);
       }
       // this.message.success('修改成功');
     });
+  }
+  getUserInfo() {
+    const data={}
+    this.appService.getUserInfo(data).subscribe(t => {
+      // console.log(t);
+      localStorage.setItem('mobile', t.Mobile);
+      localStorage.setItem('name', t.UserName);
+    })
   }
 
   constructor(private fb: FormBuilder, private appService: AppService, private router: Router) {

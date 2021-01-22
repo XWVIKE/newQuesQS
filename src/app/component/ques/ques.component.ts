@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
-import {AppService} from '../../app.service';
-import {NzMessageService} from 'ng-zorro-antd/message';
-import {NzModalService} from 'ng-zorro-antd/modal';
-import {catchError, tap} from 'rxjs/operators';
-import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
-import {toHtml} from '../../../assets/js/utils';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from '../../app.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
+import { NzModalService } from 'ng-zorro-antd/modal';
+import { catchError, tap } from 'rxjs/operators';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { toHtml } from '../../../assets/js/utils';
+import { Router } from '@angular/router';
+import { editpasswordComponent } from './dialog/editpassword.dialog';
 
 @Component({
   selector: 'app-ques',
@@ -36,17 +38,19 @@ export class QuesComponent implements OnInit {
   problemText = ''; // 问题反馈详细描述
   quill: any;
   parseList = [
-    {label: '某笔解析', data: '[]', edit: [], error: false},
-    {label: '某图解析', data: '[]', edit: [], error: false},
-    {label: '某果解析', data: '[]', edit: [], error: false},
-    {label: '某公解析', data: '[]', edit: [], error: false},
-    {label: '新途径解析', data: '[]', edit: [], error: false},
+    { label: '某笔解析', data: '[]', edit: [], error: false },
+    { label: '某图解析', data: '[]', edit: [], error: false },
+    { label: '某果解析', data: '[]', edit: [], error: false },
+    { label: '某公解析', data: '[]', edit: [], error: false },
+    { label: '新途径解析', data: '[]', edit: [], error: false },
   ];
-
+  userName = localStorage.getItem('name')||'';
+  avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
   constructor(
     private appService: AppService,
     private message: NzMessageService,
-    private modal: NzModalService
+    private modal: NzModalService,
+    private router: Router
   ) {
   }
 
@@ -59,7 +63,7 @@ export class QuesComponent implements OnInit {
       const formData = new FormData();
       formData.append('bucketName', 'duojie');
       formData.append('file', blobInfo.blob());
-      this.appService.uploadImg(formData, {'Content-Type': 'multipart/form-data'}).pipe(
+      this.appService.uploadImg(formData, { 'Content-Type': 'multipart/form-data' }).pipe(
         tap(t => {
           success(t.url.split('?')[0]);
         }),
@@ -275,7 +279,7 @@ export class QuesComponent implements OnInit {
   getQuesData(): void {
     this.loading = true;
     this.appService
-      .getQuesData({sortNum: this.sortNum, name: this.selectType})
+      .getQuesData({ sortNum: this.sortNum, name: this.selectType })
       .pipe(
         // 获取资料
         tap((t) => {
@@ -356,4 +360,29 @@ export class QuesComponent implements OnInit {
       });
   }
 
+  /**
+    * 退出登录
+    */
+  loginout(): void {
+    localStorage.clear();
+    this.router.navigate(['/login'])
+  }
+
+  /**
+   * 修改密码
+   */
+  editPassWord() {
+    const modal = this.modal.create({
+      nzTitle: '修改密码',
+      nzContent: editpasswordComponent,
+      nzWrapClassName: 'edituser-dialog-wrap',
+      nzComponentParams: {
+        oldPassword: '',
+        newPassword: ''
+      },
+      nzFooter: null
+    });
+    // modal.afterOpen.subscribe(() => console.log('[afterOpen] emitted!'));
+    // modal.afterClose.subscribe(result => console.log('[afterClose] The result is:', result));
+  }
 }

@@ -1,8 +1,8 @@
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable, of} from 'rxjs';
-import {catchError, map, switchMap, tap} from 'rxjs/operators';
-import {url} from '../config/api';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, of } from 'rxjs';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { url } from '../config/api';
 
 interface Data {
   data: any;
@@ -90,18 +90,33 @@ export class AppService {
 
   login(data: object): Observable<any> {
     return this.http.post<Data>(url.goLogin, data).pipe(
-      switchMap(_ => of(_.data)),
+      // switchMap(_ => of(_.data)),
       catchError(this.handleError<object>('login', {}))
     );
   }
 
   register(data: object): Observable<any> {
     return this.http.post<Data>(url.goRegister, data).pipe(
-      switchMap(_ => of(_.data)),
+      // switchMap(_ => of(_.data)),
       catchError(this.handleError<object>('register', {}))
     );
   }
 
+
+  getUserInfo(data: object): Observable<any> {
+    return this.http.get<Data>(url.getUserInfo, data).pipe(
+      switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('getUserInfo', {}))
+    );
+  }
+
+  
+  editPassword(data: object): Observable<any> {
+    return this.http.post<Data>(url.editPassword, data).pipe(
+      // switchMap(_ => of(_.data)),
+      catchError(this.handleError<object>('editPassword', {}))
+    );
+  }
   // tslint:disable-next-line:typedef
   private handleError<T>(operation = 'operation', result?: T) {
     return (error: any): Observable<T> => {

@@ -12,6 +12,8 @@ const url = {
   addParse: baseUlr + '/auditParse/addParse',
   goLogin: baseUlr + '/auditParse/login',
   goRegister: baseUlr + '/auditParse/register',
+  getUserInfo: baseUlr + '/auditParse/userInfo',
+  editPassword: baseUlr + '/auditParse/password/change',
   // goRegister: 'http://47.102.40.118:8098/auditParse/register'
 };
 
