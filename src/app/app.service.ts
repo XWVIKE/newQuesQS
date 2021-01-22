@@ -110,7 +110,6 @@ export class AppService {
     );
   }
 
-  
   editPassword(data: object): Observable<any> {
     return this.http.post<Data>(url.editPassword, data).pipe(
       // switchMap(_ => of(_.data)),
