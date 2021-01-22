@@ -6,7 +6,7 @@ import { catchError, tap } from 'rxjs/operators';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { toHtml } from '../../../assets/js/utils';
 import { Router } from '@angular/router';
-import { editpasswordComponent } from './dialog/editpassword.dialog';
+import { EditpasswordComponent } from './dialog/editpassword.dialog';
 
 @Component({
   selector: 'app-ques',
@@ -44,7 +44,7 @@ export class QuesComponent implements OnInit {
     { label: '某公解析', data: '[]', edit: [], error: false },
     { label: '新途径解析', data: '[]', edit: [], error: false },
   ];
-  userName = localStorage.getItem('name')||'';
+  userName = localStorage.getItem('name') || '';
   avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
   constructor(
     private appService: AppService,
@@ -361,20 +361,20 @@ export class QuesComponent implements OnInit {
   }
 
   /**
-    * 退出登录
-    */
+   * 退出登录
+   */
   loginout(): void {
     localStorage.clear();
-    this.router.navigate(['/login'])
+    this.router.navigate(['/login']);
   }
 
   /**
    * 修改密码
    */
-  editPassWord() {
+  editPassWord(): void {
     const modal = this.modal.create({
       nzTitle: '修改密码',
-      nzContent: editpasswordComponent,
+      nzContent: EditpasswordComponent,
       nzWrapClassName: 'edituser-dialog-wrap',
       nzComponentParams: {
         oldPassword: '',

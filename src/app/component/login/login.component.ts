@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import {AppService} from '../../app.service';
-import {ActivatedRoute, Params, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { AppService } from '../../app.service';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -43,13 +43,13 @@ export class LoginComponent implements OnInit {
       // this.message.success('修改成功');
     });
   }
-  getUserInfo() {
-    const data={}
+  getUserInfo(): void {
+    const data = {};
     this.appService.getUserInfo(data).subscribe(t => {
       // console.log(t);
       localStorage.setItem('mobile', t.Mobile);
       localStorage.setItem('name', t.UserName);
-    })
+    });
   }
 
   constructor(private fb: FormBuilder, private appService: AppService, private router: Router) {
